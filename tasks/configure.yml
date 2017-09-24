@@ -8,9 +8,9 @@
 - name: Login to Concourse as team
   command: >
     fly -t _ login
-    -u {{ vault_concourse_basic_auth_username }}
-    -p {{ vault_concourse_basic_auth_password }}
-    --concourse-url {{ vault_concourse_url }}
+    -u {{ vault_concourse_config[instance].basic_auth_username }}
+    -p {{ vault_concourse_config[instance].basic_auth_password }}
+    --concourse-url {{ vault_concourse_config[instance].url }}
   delegate_to: localhost
   no_log: true
   changed_when: false
@@ -22,7 +22,7 @@
       --load-vars-from  concourse_pipelines/{{ concourse_name }}/credentials-ci.yml
       --config          concourse_pipelines/{{ concourse_name }}/{{ item.name }}/pipeline.yml
       --pipeline {{ item.name }}
-      --var git-private-key='{{ lookup("file", ".keys/concourse-worker/worker_key") }}'
+      --var git-private-key='{{ lookup("file", ".keys/" + instance + "/concourse-worker/worker_key") }}'
       -n
   with_items:
     - "{{ concourse_pipelines }}"
