@@ -1,4 +1,4 @@
 ---
 # defaults vars file for current role
-
+instance: default
 # vim:ft=ansible:
