@@ -16,7 +16,7 @@
   changed_when: false
 
 # Create pipelines
-- name: Setup the pipeline for the team
+- name: Setup the pipeline
   command: >
     fly -t _ set-pipeline
       --load-vars-from  concourse_pipelines/{{ instance }}/credentials-ci.yml
@@ -27,7 +27,6 @@
   with_items:
     - "{{ concourse_pipelines }}"
   delegate_to: localhost
-  no_log: true
 
 - name: Expose the pipeline if needed
   command: >
