@@ -1,8 +1,8 @@
 ---
 - name: Build credentials file
   template:
-    src: "concourse_pipelines/{{ concourse_name }}/credentials-ci.yml.j2"
-    dest: "concourse_pipelines/{{ concourse_name }}/credentials-ci.yml"
+    src: "concourse_pipelines/{{ instance }}/credentials-ci.yml.j2"
+    dest: "concourse_pipelines/{{ instance }}/credentials-ci.yml"
   delegate_to: localhost
 
 - name: Login to Concourse as team
@@ -19,8 +19,8 @@
 - name: Setup the pipeline for the team
   command: >
     fly -t _ set-pipeline
-      --load-vars-from  concourse_pipelines/{{ concourse_name }}/credentials-ci.yml
-      --config          concourse_pipelines/{{ concourse_name }}/{{ item.name }}/pipeline.yml
+      --load-vars-from  concourse_pipelines/{{ instance }}/credentials-ci.yml
+      --config          concourse_pipelines/{{ instance }}/{{ item.name }}/pipeline.yml
       --pipeline {{ item.name }}
       --var git-private-key='{{ lookup("file", ".keys/" + instance + "/concourse-worker/worker_key") }}'
       -n
