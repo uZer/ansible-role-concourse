@@ -1,0 +1,39 @@
+---
+- name: Build credentials file
+  template:
+    src: "concourse_pipelines/{{ concourse_name }}/credentials-ci.yml.j2"
+    dest: "concourse_pipelines/{{ concourse_name }}/credentials-ci.yml"
+  delegate_to: localhost
+
+- name: Login to Concourse as team
+  command: >
+    fly -t _ login
+    -u {{ vault_concourse_basic_auth_username }}
+    -p {{ vault_concourse_basic_auth_password }}
+    --concourse-url {{ vault_concourse_url }}
+  delegate_to: localhost
+  no_log: true
+  changed_when: false
+
+# Create pipelines
+- name: Setup the pipeline for the team
+  command: >
+    fly -t _ set-pipeline
+      --load-vars-from  concourse_pipelines/{{ concourse_name }}/credentials-ci.yml
+      --config          concourse_pipelines/{{ concourse_name }}/{{ item.name }}/pipeline.yml
+      --pipeline {{ item.name }}
+      --var git-private-key='{{ lookup("file", ".keys/concourse-worker/worker_key") }}'
+      -n
+  with_items:
+    - "{{ concourse_pipelines }}"
+  delegate_to: localhost
+  no_log: true
+
+- name: Expose the pipeline if needed
+  command: >
+    fly -t _ expose-pipeline
+      --pipeline {{ item.name }}
+  when: item.expose
+  with_items:
+    - "{{ concourse_pipelines }}"
+  delegate_to: localhost
