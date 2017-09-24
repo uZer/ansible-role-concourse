@@ -1,4 +1,4 @@
-# ansible-role-cfg-concourse
+# ansible-role-concourse
 
 Configure existing concourse CI.
 Role will download and install fly binary, and build/push concourse configuration
@@ -8,5 +8,5 @@ Role will download and install fly binary, and build/push concourse configuratio
 
     - name: Playbook
       roles:
-        - role: ansible-role-cfg-concourse
+        - role: ansible-role-concourse
 
