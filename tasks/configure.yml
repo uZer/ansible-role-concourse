@@ -7,7 +7,7 @@
 
 - name: Login to Concourse as team
   command: >
-    fly -t _ login
+    fly -t {{ instance }} login
     -u {{ vault_concourse_config[instance].basic_auth_username }}
     -p {{ vault_concourse_config[instance].basic_auth_password }}
     --concourse-url {{ vault_concourse_config[instance].url }}
@@ -18,7 +18,7 @@
 # Create pipelines
 - name: Setup the pipeline
   command: >
-    fly -t _ set-pipeline
+    fly -t {{ instance }} set-pipeline
       --load-vars-from  concourse_pipelines/{{ instance }}/credentials-ci.yml
       --config          concourse_pipelines/{{ instance }}/{{ item.name }}/pipeline.yml
       --pipeline {{ item.name }}
@@ -30,7 +30,7 @@
 
 - name: Expose the pipeline if needed
   command: >
-    fly -t _ expose-pipeline
+    fly -t {{ instance }} expose-pipeline
       --pipeline {{ item.name }}
   when: item.expose
   with_items:
