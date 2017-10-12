@@ -4,6 +4,9 @@
     src: "concourse_pipelines/{{ instance }}/credentials-ci.yml.j2"
     dest: "concourse_pipelines/{{ instance }}/credentials-ci.yml"
   delegate_to: localhost
+  tags:
+    - configure
+    - pipeline
 
 - name: Login to Concourse as team
   command: >
@@ -14,6 +17,9 @@
   delegate_to: localhost
   no_log: true
   changed_when: false
+  tags:
+    - configure
+    - pipeline
 
 # Create pipelines
 - name: Setup the pipeline
@@ -27,6 +33,9 @@
   with_items:
     - "{{ concourse_pipelines }}"
   delegate_to: localhost
+  tags:
+    - configure
+    - pipeline
 
 - name: Expose the pipeline if needed
   command: >
@@ -36,3 +45,6 @@
   with_items:
     - "{{ concourse_pipelines }}"
   delegate_to: localhost
+  tags:
+    - configure
+    - pipeline

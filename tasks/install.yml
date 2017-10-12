@@ -10,9 +10,6 @@
   changed_when: false
   failed_when: false
 
-- debug:
-    var: flycheck.stdout | match('^3\.[0-9]+\.[0-9]+$')
-
 - name: Install fly
   get_url:
     url:  "{{ vault_concourse_config[instance].url }}/api/v1/cli?arch=amd64&platform=linux"
